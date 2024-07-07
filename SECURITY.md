@@ -1,0 +1,2 @@
+- Make keys expirate / add a counter of max usages
+- Distribute each pub key using a different circuit and exit tor node

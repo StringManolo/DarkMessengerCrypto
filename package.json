@@ -1,0 +1,15 @@
+{
+  "name": "darkmessengercrypto",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cryptography for DarkMessenger: Secure end-to-end encryption and message authentication.",
+  "main": "generateECDHKeys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ntru": "^4.0.4"
+  }
+}
