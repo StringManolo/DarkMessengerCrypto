@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "elliptic": "^6.5.5",
     "ntru": "^4.0.4",
     "pqclean": "^0.4.0"
   }
