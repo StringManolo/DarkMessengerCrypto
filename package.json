@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ntru": "^4.0.4"
+    "ntru": "^4.0.4",
+    "pqclean": "^0.4.0"
   }
 }
