@@ -21,3 +21,5 @@ Details included in the encrypted data:
 - Tag (Authentication Tag)
 - PublicKey (Alice's public key used for encryption)
 
+#### crypto_modules/RSA_module.js
+Implements RSA 2048 bits. Uses hex codification for PEM.
