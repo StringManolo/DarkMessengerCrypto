@@ -4,7 +4,7 @@ Cryptography for DarkMessenger: Secure end-to-end encryption and message authent
 
 ### Files:
 
-#### ERNK.js
+#### ERK.js
 Utilizes all encryption methods simultaneously.
 
 #### crypto_modules/ECIES_module.js

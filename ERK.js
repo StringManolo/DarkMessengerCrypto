@@ -2,9 +2,8 @@
 
 
 import { ECIES_priv_key, ECIES_pub_key, ECIES_encrypt, ECIES_decrypt } from "./crypto_modules/ECIES_module.js";
-import { RSA_priv_key     , RSA_pub_key, RSA_encrypt, RSA_decrypt } from "./crypto_modules/RSA_module.js";
+import { RSA_priv_key, RSA_pub_key, RSA_encrypt, RSA_decrypt } from "./crypto_modules/RSA_module.js";
 /*
-import { NTRU_priv_key    , NTRU_pub_key    } from "./generateNTRUKeys.js"
 import { KYBER_priv_key   , KYBER_pub_key   } from "./generateKYBERKeys.js"
 */
 
@@ -40,8 +39,8 @@ debug("ECIES", plaintext, { ciphertext, iv, tag, publicKey }, decryptedText);
 
 /* [ START RSA ] */
 /* BOB generated it's keys a couple days ago using:
- * const bob_pub_key = RSA_pub_key();
- * const bob_priv_key = RSA_pub_key();
+ * const bob_RSA_pub_key = RSA_pub_key();
+ * const bob_RSA_priv_key = RSA_pub_key();
 */
 // Bob keys
 const bob_RSA_pub_key = "30820122300d06092a864886f70d01010105000382010f003082010a0282010100bae4a70f90ebff858e6549b1b4d088310fd97b3fa0d1a14f9a929e2a6bb02e4e8af1faa236ef2b43a066743025c6ef83f776b09dddcc5a13198563d26dab6ae10a78f53cd40d0bd9102e303e331b2cedd6941503bab7600c19594322ebd7d691debfd472d4f150701bd3c1eecb7af30a8117169178d9afdb77acd1d3cf9c38fd7e4c62dafd3ea39c822fbee7570eec6fc0e43ec6e067dd186fd6592ce772a30bde2e07a1a0c1d491ff4a03acf1347f7af021a91c00a79bddfaf2b1bc2476dd0fa288b824560a870e55b27e1f637a838288524be9c48a8c7cad6ef1fff87d8bf5c5c913747174939a06051fa15c449578ee95222ce0fdc88e679b949a8d21e2a50203010001";
@@ -52,5 +51,6 @@ const bob_RSA_priv_key = "308204a40201000282010100bae4a70f90ebff858e6549b1b4d088
 const encrypted_RSA = RSA_encrypt(plaintext, bob_RSA_pub_key);
 const decrypted_RSA = RSA_decrypt(encrypted_RSA, bob_RSA_priv_key);
 debug("RSA", plaintext, encrypted_RSA, decrypted_RSA);
+/* [ END RSA ] */
 
 
