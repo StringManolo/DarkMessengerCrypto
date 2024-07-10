@@ -1,6 +1,6 @@
 {
   "name": "stringmanolo-erk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "description": "Cryptography for DarkMessenger: Secure end-to-end encryption and message authentication.",
   "main": "crypto_modules/ERK_module.js",
