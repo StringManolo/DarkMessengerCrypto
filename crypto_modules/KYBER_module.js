@@ -1,4 +1,4 @@
-//process.removeAllListeners('warning');
+process.removeAllListeners('warning');
 
 import PQClean from "pqclean";
 import crypto from "crypto";

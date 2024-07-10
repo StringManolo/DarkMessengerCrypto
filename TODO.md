@@ -1,8 +1,4 @@
 # TODO  
   
-- Implement RSA module
-- Implement NTRU module
-- Implement Kyber module
-- Normalize crypto_modules/ECIES_module.js encryption output to don't include predictable javascript object (shouldn't matter at all)
+- Since ERK are using AES, replace AES by another 2 alorythms. (Prob chacha with poly and a custom made by me)
 
-- Output keys to FS to later use.
