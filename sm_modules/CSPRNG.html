@@ -129,7 +129,7 @@ const generatePassword = (size) => {
 
   let generatedPassword = "";
   while (generatedPassword.length < size) {
-    const numericString = CSPRNG(size);
+    const numericString = CSPRNG(size + 1);
     generatedPassword += numbersToCharacters(numericString);
   }
   return generatedPassword.substring(0, size);
