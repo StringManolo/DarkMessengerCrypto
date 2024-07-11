@@ -139,3 +139,6 @@ Implements post-quantum encryption using the Kyber1024 KEM algorithm.
 
 ### MISC
 If you get a warning about being unable to use native bindings from KYBER module, check [this issue](https://github.com/tniessen/node-pqclean/issues/3#issuecomment-2220334791)
+
+##### sm_modules
+sm_modules are not part of ERK. ERK uses standart algorithms. sm_modules use algorithms designed and implemented by me. 
