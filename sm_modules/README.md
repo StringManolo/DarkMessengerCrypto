@@ -111,7 +111,7 @@ Javascript Cryptographically Secure Pseudo-Random Number Generator (CSPRNG)
 | dab_opso2                |  0   | 67108864  | 1        | 0.84273832  | PASSED     |
 | dab_opso2                |  1   | 67108864  | 1        | 0.50935704  | PASSED     |
 
-##### ent results;
+##### ent results:
 | File          | Size (bytes) | Entropy (bits/byte) | Optimal Reduction (%) | Chi-square   | Arithmetic Mean | MC Pi | Serial Correlation | Score |
 |---------------|--------------|---------------------|-----------------------|--------------|-----------------|-------|--------------------|-------|
 | urandom       | 10000        | 3.321443            | 58                    | 246172.65    | 52.5169         | 4     | 0.004015           | 75    |
