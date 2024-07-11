@@ -102,7 +102,41 @@
 
       return shuffle(redistribute(entropy.substring(0, size)));
     }
-   
+  
+/* PASSWORD GENERATOR: */
+
+const generatePassword = (size) => {
+  const numbersToCharacters = (numericString) => {
+    let binaryString = '';
+
+    for (let i = 0; i < numericString.length; i++) {
+      const digit = parseInt(numericString.charAt(i), 10);
+      const binary = digit.toString(2).padStart(4, '0');
+      binaryString += binary;
+    }
+
+    let password = '';
+    for (let j = 0; j < binaryString.length; j += 8) {
+      const byte = binaryString.substr(j, 8);
+      const asciiCode = parseInt(byte, 2);
+      if (asciiCode > 32 && asciiCode < 127) {
+        password += String.fromCharCode(asciiCode);
+      }
+    }
+
+    return password;
+  };
+
+  let generatedPassword = "";
+  while (generatedPassword.length < size) {
+    const numericString = CSPRNG(size);
+    generatedPassword += numbersToCharacters(numericString);
+  }
+  return generatedPassword.substring(0, size);
+}
+
+window.generatePassword = generatePassword;
+
   </script>
 </head>
 <body>
@@ -115,8 +149,16 @@
     <br />
     <button id="generate" type="button">Generate Numbers</button><br><br>
     <label for="random-numbers">Generated Numbers:</label><br>
-    <textarea id="random-numbers" rows="10" cols="50" readonly></textarea>
+    <textarea id="random-numbers" rows="10" cols="40" readonly></textarea>
   </form>
+
+  <div>
+    <h3>Password Generator</h3>
+     Password Size:  <input type="number" id="passwordSize" value="20">
+    <br>
+    <button id="generate-password">Generate Password</button><br><br>
+    <textarea id="random-password" rows="4" cols="40" readonly></textarea>
+  </div>
 
   <script>
 // IU:
@@ -135,6 +177,17 @@
       const size = parseInt(document.querySelector('#sliderValue').value);
       const randomNumbers = CSPRNG(size);
       document.getElementById('random-numbers').value = randomNumbers;
+    });
+
+
+/* PASSWORD GENERATOR UI */
+    const passInput = document.getElementById("passwordSize");
+    const passButton = document.getElementById("generate-password");
+    const passResult = document.getElementById("random-password");
+
+    passButton.addEventListener("click", () => {
+      const passwordSize = passInput.value;
+      passResult.value = generatePassword(passwordSize); 
     });
   </script>
 </body>
