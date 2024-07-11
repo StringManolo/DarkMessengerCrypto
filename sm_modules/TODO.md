@@ -1,0 +1,2 @@
+- Add stats and live analysis to CSPRNG.html
+- Make Zeros removed based on an average of other frecuencies with a small error margin
