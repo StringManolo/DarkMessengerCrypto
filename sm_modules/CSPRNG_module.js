@@ -101,7 +101,7 @@ const CSPRNG = (size) => {
 // Example usage
 // const randNums = CSPRNG(10000); // 10000 is the length of the generated numbers
 //console.log(CSPRNG(10000));
-//process.stdout.write(CSPRNG(10000)); // console.log adds a line break at the end
+process.stdout.write(CSPRNG(10000)); // console.log adds a line break at the end
 
 export { CSPRNG };
 
