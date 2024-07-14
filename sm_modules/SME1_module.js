@@ -63,15 +63,16 @@ const SME1 = (plaintext) => {
 
   // STEP 2: Generate a KEY the same size of the plaintext + random size padding
   //const privKey = generateKey(plaintext.length + paddingSize + 1); // NOTICE!!! If you use a shorter key than the FULL SIZE, the key can be extracted from the ciphertext cuz padding bytes are not random.  
-  let privKey = "admin" // generateKey(1);
+  let privKey = "admin"
+  //let privKey = generateKey(16);
 const debugKey = privKey;
 const decryptKey = `${privKey}+${paddingSize}`
   const ivSize = 16;
   debug(`KD_SHA("${privKey}", ${plaintext.length + paddingSize + ivSize});`);
-  privKey = KD_SHA(privKey, plaintext.length + paddingSize + ivSize);
+  privKey = KD_SHA(privKey, plaintext.length + paddingSize + ivSize + 100); // +100 isbjust as a safeguard
 
   const iv = CSPRNG(ivSize);
-  const derIV = KD_SHA(iv, plaintext.length + paddingSize + ivSize);
+  const derIV = KD_SHA(iv, plaintext.length + paddingSize + ivSize +100);
   debug("iv:", iv);
   debug(`DerIV: ${derIV} with size ${derIV.length}. The Data size is ${privKey.length}`);
   debug(`XOR("${iv + plaintext.length + padding}", "${privKey}");`);
@@ -101,13 +102,15 @@ const decryptKey = `${privKey}+${paddingSize}`
   `);
 
   debug(`Size of encrypted text without iv is ${encryptedText.length}`);
-  return [ iv + encryptedText, decryptKey ];
+
+  return [Buffer.from(iv + encryptedText).toString("base64"), decryptKey ];
 }
 
 
 
 
 const DECRYPT_SME1 = (encryptedText, privKey) => {
+  encryptedText = Buffer.from(encryptedText, "base64").toString();
   debug("-----------------------------------\n");
   debug(`Decrypting ... `);
   const ivSize = 16;
@@ -121,7 +124,7 @@ const DECRYPT_SME1 = (encryptedText, privKey) => {
 
 
   debug(`KD_SHA("${origKey}", ${encryptedText.length});`);
-  const internalKey = KD_SHA(origKey, encryptedText.length);
+  const internalKey = KD_SHA(origKey, encryptedText.length + 100); // +100 is just a safeguard
   debug(`padding size: ${paddingSize}
     deriKey size: ${internalKey.length}
     deriKey: [[${internalKey}]]
@@ -129,7 +132,7 @@ const DECRYPT_SME1 = (encryptedText, privKey) => {
 
   //encryptedText = Buffer.from(encryptedText, "base64");
 
-  const derIV = KD_SHA(iv, internalKey.length);
+  const derIV = KD_SHA(iv, internalKey.length + 100);
   debug(`DerIV: ${derIV}`);
   encryptedText = XOR(encryptedText, derIV);
 
@@ -148,7 +151,7 @@ const DECRYPT_SME1 = (encryptedText, privKey) => {
 }
 
 
-
+/*
 const plaintext = "Hello World!";
 const [ encrypted, key ] = SME1(plaintext);
 const decrypted = DECRYPT_SME1(encrypted, key);
@@ -165,5 +168,6 @@ Decryption Key: ${key}
 
 Do decrypted data match plaintext? ${plaintext === decrypted ? "YES" : "NO"}
 `);
+*/
 
-
+export { SME1, DECRYPT_SME1 };
