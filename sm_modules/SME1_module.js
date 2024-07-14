@@ -11,7 +11,7 @@ const debug = (text) => {
     console.log(`[debug-${++debugCounter}]${text}[/debug-${debugCounter}]`);
   }
 }
-const performance = false; //activate performance messages
+const performance = true; //activate performance messages
 let perfCounter = 1;
 let perfDate;
 const perf = (text) => {
