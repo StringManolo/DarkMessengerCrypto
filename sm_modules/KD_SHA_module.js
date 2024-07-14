@@ -1,7 +1,5 @@
 import crypto from "crypto";
 
-
-
 const KD_SHA = (key, size) => {
   if (key.length >= size) {
     console.log("KD_5UM: Returning key, already expected size");

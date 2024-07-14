@@ -1,2 +1,3 @@
 - Add stats and live analysis to CSPRNG.html
-- Make Zeros removed based on an average of other frecuencies with a small error margin
+- Make Zeros removed based on an average of other frecuencies with a small error margin- Add tag to SME
+- Add some short of rounds to difuse iv?
