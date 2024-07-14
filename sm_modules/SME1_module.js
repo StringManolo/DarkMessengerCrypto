@@ -4,13 +4,29 @@ import { KD_SHA } from "./KD_SHA_module.js";
 import { PADDING_FIXED, REM_PADDING_FIXED } from "./PADDING_FIXED_module.js";
 import { XOR } from "./XOR_module.js";
 
-const useDebug = false;
+const useDebug = false; //activate debug messages
 let debugCounter = 0;
 const debug = (text) => {
   if (useDebug) {
     console.log(`[debug-${++debugCounter}]${text}[/debug-${debugCounter}]`);
   }
 }
+const performance = false; //activate performance messages
+let perfCounter = 1;
+let perfDate;
+const perf = (text) => {
+  if (performance) {
+    if (perfCounter % 2 !== 0 ) {
+      perfDate = new Date().getTime();
+      if (text) console.log(`(starting time)->${text}`);
+    } else {
+      console.log(`(${new Date().getTime() - perfDate} ms)->${text || "done"})\n`);
+    }
+  ++perfCounter
+  }
+}
+
+
 
 
 const generateKey = (size) => {
@@ -49,37 +65,59 @@ const generateKey = (size) => {
 
 
 
-const SME1 = (plaintext) => {
+const SME1 = (plaintext, userKey) => {
   // STEP 1: generate a padding of a random length
+  perf(`minPadding`);
   const minPadding = Math.trunc((+CSPRNG(2) + 100) * (+CSPRNG(1) + 1) / 3); // Increase the minimum padding for short plaintexts (random number between 100 and 200 * random number between 1 and 10
+  perf();
+
+  perf(`PaddingSize`);
   let paddingSize = Math.trunc((plaintext.length / 100) * (+CSPRNG(1) + /*+CSPRNG(1)*/ +1) + minPadding) // Random size between 1%-9% of the text to encrypt + a Random minimum size
+  perf();
   
 //debug:
-  //paddingSize = 1
+  //paddingSize = 1 
 
+  perf(`Generating Padding`);
+  console.log(`EXPECTED PADDING SIZE: ${paddingSize}`);
   let padding = PADDING_FIXED(paddingSize);
+  console.log(`REAL PADDING SIZE ${padding.length}`);
+  perf();
 
   debug("Padding is:", padding);
 
   // STEP 2: Generate a KEY the same size of the plaintext + random size padding
   //const privKey = generateKey(plaintext.length + paddingSize + 1); // NOTICE!!! If you use a shorter key than the FULL SIZE, the key can be extracted from the ciphertext cuz padding bytes are not random.  
-  let privKey = "admin"
+  let privKey = userKey; // "admin"
   //let privKey = generateKey(16);
 const debugKey = privKey;
 const decryptKey = `${privKey}+${paddingSize}`
   const ivSize = 16;
   debug(`KD_SHA("${privKey}", ${plaintext.length + paddingSize + ivSize});`);
-  privKey = KD_SHA(privKey, plaintext.length + paddingSize + ivSize + 100); // +100 isbjust as a safeguard
+  perf(`Derivating privKey ${privKey} to ${plaintext.length} + ${paddingSize} + ${ivSize} + 100} Bytes`);
+  console.log(`PRIV KEY EXPECTED SIZE: ${plaintext.length + paddingSize + ivSize}`);
+  privKey = KD_SHA(privKey, Buffer.from(plaintext).length + paddingSize + ivSize + 100); // +100 isbjust as a safeguard
+  console.log(`PRIV KEY REAL SIZE: ${privKey.length}`);
+  perf();
 
+  perf(`Generating IV`);
   const iv = CSPRNG(ivSize);
-  const derIV = KD_SHA(iv, plaintext.length + paddingSize + ivSize +100);
+  perf();
   debug("iv:", iv);
-  debug(`DerIV: ${derIV} with size ${derIV.length}. The Data size is ${privKey.length}`);
   debug(`XOR("${iv + plaintext.length + padding}", "${privKey}");`);
-  let encryptedText = XOR(iv + plaintext + padding, privKey);
+  perf(`ROUND1: Encrypting iv + data + padding using privKey`);
+  let encryptedText = XOR(`${iv}${plaintext}${padding}`, privKey);
+  perf();
+
+  perf(`Derivating IV to KeySize`);
+  const derIV = KD_SHA(iv, encryptedText.length);   //iv, plaintext.length + paddingSize + ivSize +100);
+  perf();
+  debug(`DerIV: ${derIV} with size ${derIV.length}. The Data size is ${encryptedText.length}`);
 
   debug(`Xoring again with derIV to output "random" data ...`);
+  perf(`ROUND2: Encrypting round1 with derivIV`);
   encryptedText = XOR(encryptedText, derIV);
+  perf();
 
   debug(`plaintext size: ${plaintext.length}
     plaintext: ${plaintext}
@@ -103,14 +141,18 @@ const decryptKey = `${privKey}+${paddingSize}`
 
   debug(`Size of encrypted text without iv is ${encryptedText.length}`);
 
-  return [Buffer.from(iv + encryptedText).toString("base64"), decryptKey ];
+  //perf(`Encoding encrypted data to base64`);
+  //const retArr = [Buffer.from(iv + encryptedText).toString("base64"), decryptKey ];
+  //perf();
+  const retArr = [`${iv}${encryptedText}`, decryptKey ];
+  return retArr;
 }
 
 
 
 
 const DECRYPT_SME1 = (encryptedText, privKey) => {
-  encryptedText = Buffer.from(encryptedText, "base64").toString();
+  //encryptedText = Buffer.from(encryptedText, "base64").toString();
   debug("-----------------------------------\n");
   debug(`Decrypting ... `);
   const ivSize = 16;
@@ -124,7 +166,7 @@ const DECRYPT_SME1 = (encryptedText, privKey) => {
 
 
   debug(`KD_SHA("${origKey}", ${encryptedText.length});`);
-  const internalKey = KD_SHA(origKey, encryptedText.length + 100); // +100 is just a safeguard
+  const internalKey = KD_SHA(origKey, Buffer.from(encryptedText).length); 
   debug(`padding size: ${paddingSize}
     deriKey size: ${internalKey.length}
     deriKey: [[${internalKey}]]
@@ -132,7 +174,7 @@ const DECRYPT_SME1 = (encryptedText, privKey) => {
 
   //encryptedText = Buffer.from(encryptedText, "base64");
 
-  const derIV = KD_SHA(iv, internalKey.length + 100);
+  const derIV = KD_SHA(iv, internalKey.length);
   debug(`DerIV: ${derIV}`);
   encryptedText = XOR(encryptedText, derIV);
 

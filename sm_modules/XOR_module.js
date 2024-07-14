@@ -1,19 +1,35 @@
 const XOR = (plaintext, key, mode="normal") => {
-/* 
-  console.log(`
+  
+  /*console.log(`
 
   OP ENTRADA: ${mode}
 
   XOR TEXT SIZE: ${plaintext.length}
-  XOR ENTRA TEXT: [[${plaintext}]]
+  TYPEOF: ${typeof plaintext}
+  XOR ENTRA TEXT: [[${"OMITED" || plaintext}]]
 
   XOR KEY SIZE: ${key.length}
-  XOR ENTRA KEY: [[${key}]]
-`);
-*/
+  TYPEOF: ${typeof key}
+  XOR ENTRA KEY: [[${"OMITED" || key}]]
+`);*/
+
 
   const keyBuffer = Buffer.from(key);
   const plaintextBuffer = Buffer.from(plaintext);
+
+/*
+  console.log(`
+  POST-CONVERSION
+
+  TEXT HEX SIZE: ${plaintext.toString("hex").length}
+  KEY HEX SIZE: ${key.toString("hex").length}
+  XOR TEXT BUFFER SIZE: ${plaintextBuffer.length}
+  XOR TEXT BUFFER HEX SIZE: ${plaintextBuffer.toString('hex').length}
+  XOR KEY BUFFER SIZE: ${keyBuffer.length}
+  XOR KEY BUFFER HEX SIZE: ${keyBuffer.toString('hex').length}
+`);
+*/
+
   const encryptedBuffer = Buffer.alloc(plaintextBuffer.length);
 
   /* SECURITY CHECK: */
